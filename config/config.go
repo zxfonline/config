@@ -56,7 +56,7 @@ type Config struct {
 	comment   string
 	separator string
 
-	// === Sections order
+	// Sections order
 	lastIdSection int            // Last section identifier
 	idSection     map[string]int // Section : position
 
@@ -76,9 +76,9 @@ type tValue struct {
 // New creates an empty configuration representation.
 // This representation can be filled with AddSection and AddOption and then
 // saved to a file using WriteFile.
-// 
-// === Arguments
-// 
+//
+// == Arguments
+//
 // comment: has to be `DEFAULT_COMMENT` or `ALTERNATIVE_COMMENT`
 // separator: has to be `DEFAULT_SEPARATOR` or `ALTERNATIVE_SEPARATOR`
 // preSpace: indicate if is inserted a space before of the separator
@@ -92,7 +92,7 @@ func New(comment, separator string, preSpace, postSpace bool) *Config {
 		panic("separator character not valid")
 	}
 
-	// === Get spaces around separator
+	// == Get spaces around separator
 	if preSpace {
 		separator = " " + separator
 	}
@@ -100,7 +100,7 @@ func New(comment, separator string, preSpace, postSpace bool) *Config {
 	if postSpace {
 		separator += " "
 	}
-	// ===
+	//==
 
 	c := new(Config)
 
@@ -120,8 +120,7 @@ func NewDefault() *Config {
 	return New(DEFAULT_COMMENT, DEFAULT_SEPARATOR, false, true)
 }
 
-// === Utility
-// ===
+// == Utility
 
 func stripComments(l string) string {
 	// Comments are preceded by space or TAB

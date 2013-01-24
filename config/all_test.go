@@ -17,8 +17,8 @@ package config
 import (
 	"bufio"
 	"os"
+	"reflect"
 	"strings"
-    "reflect"
 	"testing"
 )
 
@@ -296,50 +296,50 @@ func TestSectionOptions(t *testing.T) {
 		t.Fatalf("ReadDefault failure: %s", err)
 	}
 
-    options, err := cr.SectionOptions("First-Section")
+	options, err := cr.SectionOptions("First-Section")
 
-    if err != nil {
-        t.Fatalf("SectionOptions failure: %s", err)
-    }
+	if err != nil {
+		t.Fatalf("SectionOptions failure: %s", err)
+	}
 
-    if len(options) != 2 {
-        t.Fatalf("SectionOptions reads wrong data: %v", options)
-    }
+	if len(options) != 2 {
+		t.Fatalf("SectionOptions reads wrong data: %v", options)
+	}
 
-    expected := map[string]bool{
-        "option1": true,
-        "option2": true,
-    }
-    actual := map[string]bool{}
+	expected := map[string]bool{
+		"option1": true,
+		"option2": true,
+	}
+	actual := map[string]bool{}
 
-    for _, v := range options {
-        actual[v] = true
-    }
+	for _, v := range options {
+		actual[v] = true
+	}
 
-    if !reflect.DeepEqual(expected, actual) {
-        t.Fatalf("SectionOptions reads wrong data: %v", options)
-    }
+	if !reflect.DeepEqual(expected, actual) {
+		t.Fatalf("SectionOptions reads wrong data: %v", options)
+	}
 
-    options, err = cr.SectionOptions(_DEFAULT_SECTION)
+	options, err = cr.SectionOptions(_DEFAULT_SECTION)
 
-    if err != nil {
-        t.Fatalf("SectionOptions failure: %s", err)
-    }
+	if err != nil {
+		t.Fatalf("SectionOptions failure: %s", err)
+	}
 
-    expected = map[string]bool{
-        "host":     true,
-        "protocol": true,
-        "base-url": true,
-    }
-    actual = map[string]bool{}
+	expected = map[string]bool{
+		"host":     true,
+		"protocol": true,
+		"base-url": true,
+	}
+	actual = map[string]bool{}
 
-    for _, v := range options {
-        actual[v] = true
-    }
+	for _, v := range options {
+		actual[v] = true
+	}
 
-    if !reflect.DeepEqual(expected, actual) {
-        t.Fatalf("SectionOptions reads wrong data: %v", options)
-    }
+	if !reflect.DeepEqual(expected, actual) {
+		t.Fatalf("SectionOptions reads wrong data: %v", options)
+	}
 
 	defer os.Remove(tmp)
 }

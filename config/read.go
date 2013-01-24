@@ -53,7 +53,7 @@ func ReadDefault(fname string) (*Config, error) {
 	return _read(fname, NewDefault())
 }
 
-// ===
+// * * *
 
 func (self *Config) read(buf *bufio.Reader) (err error) {
 	var section, option string
