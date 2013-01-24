@@ -86,3 +86,21 @@ func (self *Config) Options(section string) (options []string, err error) {
 
 	return options, nil
 }
+
+// SectionOptions returns only the list of options available in the given section.
+// Unlike Options, SectionOptions doesn't return options in default section.
+// It returns an error if the section doesn't exist.
+func (self *Config) SectionOptions(section string) (options []string, err error) {
+	if _, ok := self.data[section]; !ok {
+		return nil, errors.New(sectionError(section).Error())
+	}
+
+	options = make([]string, len(self.data[section]))
+	i := 0
+	for s, _ := range self.data[section] {
+		options[i] = s
+		i++
+	}
+
+	return options, nil
+}

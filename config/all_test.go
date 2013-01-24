@@ -18,6 +18,7 @@ import (
 	"bufio"
 	"os"
 	"strings"
+    "reflect"
 	"testing"
 )
 
@@ -267,6 +268,78 @@ func TestWriteReadFile(t *testing.T) {
 	testGet(t, cr, "First-Section", "option2", 2)
 	testGet(t, cr, "Another-Section", "useHTTPS", true)
 	testGet(t, cr, "Another-Section", "url", "https://www.example.com/some/path")
+
+	defer os.Remove(tmp)
+}
+
+// Tests read options in a section without default options.
+func TestSectionOptions(t *testing.T) {
+	cw := NewDefault()
+
+	// write file; will test only read later on
+	cw.AddSection("First-Section")
+	cw.AddOption("First-Section", "option1", "value option1")
+	cw.AddOption("First-Section", "option2", "2")
+
+	cw.AddOption("", "host", "www.example.com")
+	cw.AddOption(_DEFAULT_SECTION, "protocol", "https://")
+	cw.AddOption(_DEFAULT_SECTION, "base-url", "%(protocol)s%(host)s")
+
+	cw.AddOption("Another-Section", "useHTTPS", "y")
+	cw.AddOption("Another-Section", "url", "%(base-url)s/some/path")
+
+	cw.WriteFile(tmp, 0644, "Test file for test-case")
+
+	// read back file and test
+	cr, err := ReadDefault(tmp)
+	if err != nil {
+		t.Fatalf("ReadDefault failure: %s", err)
+	}
+
+    options, err := cr.SectionOptions("First-Section")
+
+    if err != nil {
+        t.Fatalf("SectionOptions failure: %s", err)
+    }
+
+    if len(options) != 2 {
+        t.Fatalf("SectionOptions reads wrong data: %v", options)
+    }
+
+    expected := map[string]bool{
+        "option1": true,
+        "option2": true,
+    }
+    actual := map[string]bool{}
+
+    for _, v := range options {
+        actual[v] = true
+    }
+
+    if !reflect.DeepEqual(expected, actual) {
+        t.Fatalf("SectionOptions reads wrong data: %v", options)
+    }
+
+    options, err = cr.SectionOptions(_DEFAULT_SECTION)
+
+    if err != nil {
+        t.Fatalf("SectionOptions failure: %s", err)
+    }
+
+    expected = map[string]bool{
+        "host":     true,
+        "protocol": true,
+        "base-url": true,
+    }
+    actual = map[string]bool{}
+
+    for _, v := range options {
+        actual[v] = true
+    }
+
+    if !reflect.DeepEqual(expected, actual) {
+        t.Fatalf("SectionOptions reads wrong data: %v", options)
+    }
 
 	defer os.Remove(tmp)
 }
