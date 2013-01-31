@@ -1,6 +1,6 @@
 ###### Notice
 
-*This is the official list of **goconfig** authors for copyright purposes.*
+*This is the official list of **config** authors for copyright purposes.*
 
 *This file is distinct from the CONTRIBUTORS file. See the latter for an
 explanation.*
@@ -13,6 +13,7 @@ explanation.*
 
 * * *
 
-John Mac <charles.beck@sent.com>
-Miguel S. Branco <msbranco@gmail.com>
+Jonas mg <github.com/kless>
+Miguel Branco <github.com/msbranco>
+Rob Figueiredo <github.com/robfig>
 

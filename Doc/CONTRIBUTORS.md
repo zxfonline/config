@@ -1,7 +1,7 @@
 ###### Notice
 
 *This is the official list of people who can contribute (and typically have
-contributed) code to the **goconfig** repository.*
+contributed) code to the **config** repository.*
 
 *The AUTHORS file lists the copyright holders; this file lists people. For
 example, the employees of an organization are listed here but not in AUTHORS,
@@ -17,12 +17,13 @@ because the organization holds the copyright.*
 
 ### Initial author(s)
 
-Miguel S. Branco <msbranco@gmail.com>
+Miguel Branco <github.com/msbranco>
 
 ### Maintainer
 
-John Mac <charles.beck@sent.com>
+Rob Figueiredo <github.com/robfig>
 
 ### Other authors
 
+Jonas mg <github.com/kless>
 
