@@ -22,7 +22,11 @@ import (
 	"testing"
 )
 
-const tmp = "/tmp/__config_test.go__garbage"
+const (
+	tmp    = "/tmp/__config_test.go__garbage"
+	source = "testdata/source.cfg"
+	target = "testdata/target.cfg"
+)
 
 func testGet(t *testing.T, c *Config, section string, option string,
 	expected interface{}) {
@@ -346,4 +350,40 @@ func TestSectionOptions(t *testing.T) {
 	}
 
 	defer os.Remove(tmp)
+}
+
+// Tests merging 2 configurations.
+func TestMerge(t *testing.T) {
+	target, error := ReadDefault(target)
+	if error != nil {
+		t.Fatalf("Unable to read target config file '%s'", target)
+	}
+
+	source, error := ReadDefault(source)
+	if error != nil {
+		t.Fatalf("Unable to read source config file '%s'", source)
+	}
+
+	target.Merge(source)
+
+	// Assert whether a regular option was merged from source -> target
+	if result, _ := target.String(DEFAULT_SECTION, "one"); result != "source1" {
+		t.Errorf("Expected 'one' to be '1' but instead it was '%s'", result)
+	}
+	// Assert that a non-existent option in source was not overwritten
+	if result, _ := target.String(DEFAULT_SECTION, "five"); result != "5" {
+		t.Errorf("Expected 'five' to be '5' but instead it was '%s'", result)
+	}
+	// Assert that a folded option was correctly unfolded
+	if result, _ := target.String(DEFAULT_SECTION, "two_+_three"); result != "source2 + source3" {
+		t.Errorf("Expected 'two_+_three' to be 'source2 + source3' but instead it was '%s'", result)
+	}
+
+	// Assert that a section option has been merged
+	if result, _ := target.String("X", "x.one"); result != "sourcex1" {
+		t.Errorf("Expected '[X] x.one' to be 'sourcex1' but instead it was '%s'", result)
+	}
+	if result, _ := target.String("X", "x.four"); result != "x4" {
+		t.Errorf("Expected '[X] x.four' to be 'x4' but instead it was '%s'", result)
+	}
 }
