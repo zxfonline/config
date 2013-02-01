@@ -378,6 +378,9 @@ func TestMerge(t *testing.T) {
 	if result, _ := target.String(DEFAULT_SECTION, "two_+_three"); result != "source2 + source3" {
 		t.Errorf("Expected 'two_+_three' to be 'source2 + source3' but instead it was '%s'", result)
 	}
+	if result, _ := target.String(DEFAULT_SECTION, "four"); result != "4" {
+		t.Errorf("Expected 'four' to be '4' but instead it was '%s'", result)
+	}
 
 	// Assert that a section option has been merged
 	if result, _ := target.String("X", "x.one"); result != "sourcex1" {
