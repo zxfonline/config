@@ -78,7 +78,7 @@ func (self *Config) RawStringDefault(option string) (value string, err error) {
 	if tValue, ok := self.data[DEFAULT_SECTION][option]; ok {
 		return tValue.v, nil
 	}
-	return "", errors.New(OptionError(option).Error())
+	return "", OptionError(option)
 }
 
 // String gets the string value for the given option in the section.
@@ -112,7 +112,7 @@ func (self *Config) String(section string, option string) (value string, err err
 			nvalue = self.data[section][noption]
 		}
 		if nvalue.v == "" {
-			return "", errors.New(OptionError(noption).Error())
+			return "", OptionError(option)
 		}
 
 		// substitute by new value and take off leading '%(' and trailing ')s'
