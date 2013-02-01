@@ -73,14 +73,21 @@ func (self *Config) Options(section string) (options []string, err error) {
 		return nil, errors.New(sectionError(section).Error())
 	}
 
-	options = make([]string, len(self.data[_DEFAULT_SECTION])+len(self.data[section]))
-	i := 0
+	// Keep a map of option names we've seen to deduplicate.
+	optionMap := make(map[string]struct{},
+		len(self.data[_DEFAULT_SECTION])+len(self.data[section]))
 	for s, _ := range self.data[_DEFAULT_SECTION] {
-		options[i] = s
-		i++
+		optionMap[s] = struct{}{}
 	}
 	for s, _ := range self.data[section] {
-		options[i] = s
+		optionMap[s] = struct{}{}
+	}
+
+	// Get the keys.
+	i := 0
+	options = make([]string, len(optionMap))
+	for k, _ := range optionMap {
+		options[i] = k
 		i++
 	}
 

@@ -201,6 +201,7 @@ func TestReadFile(t *testing.T) {
 	}
 
 	buf := bufio.NewWriter(file)
+	buf.WriteString("optionInDefaultSection=true\n")
 	buf.WriteString("[section-1]\n")
 	buf.WriteString("  option1=value1 ; This is a comment\n")
 	buf.WriteString(" option2 : 2#Not a comment\t#Now this is a comment after a TAB\n")
@@ -214,6 +215,7 @@ func TestReadFile(t *testing.T) {
 	buf.WriteString("IS-flag-TRUE=Yes\n")
 	buf.WriteString("[section-1]\n") // continue again [section-1]
 	buf.WriteString("option4=this_is_%(variable2)s.\n")
+	buf.WriteString("optionInDefaultSection=false\n")
 	buf.Flush()
 	file.Close()
 
@@ -229,14 +231,16 @@ func TestReadFile(t *testing.T) {
 
 	// check number of options 4 of [section-1] plus 2 of [default]
 	opts, err := c.Options("section-1")
-	if len(opts) != 6 {
-		t.Errorf("Options failure: wrong number of options")
+	if len(opts) != 7 {
+		t.Errorf("Options failure: wrong number of options: %d", len(opts))
 	}
 
 	testGet(t, c, "section-1", "option1", "value1")
 	testGet(t, c, "section-1", "option2", "2#Not a comment")
 	testGet(t, c, "section-1", "option3", "line1\nline2\nline3")
 	testGet(t, c, "section-1", "option4", "this_is_a_part_of_a_small_test.")
+	testGet(t, c, "section-1", "optionInDefaultSection", false)
+	testGet(t, c, "section-2", "optionInDefaultSection", true)
 	testGet(t, c, "secTION-2", "IS-flag-TRUE", true) // case-sensitive
 }
 
