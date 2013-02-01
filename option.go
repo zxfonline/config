@@ -27,7 +27,7 @@ func (self *Config) AddOption(section string, option string, value string) bool 
 	self.AddSection(section) // Make sure section exists
 
 	if section == "" {
-		section = _DEFAULT_SECTION
+		section = DEFAULT_SECTION
 	}
 
 	_, ok := self.data[section][option]
@@ -59,7 +59,7 @@ func (self *Config) HasOption(section string, option string) bool {
 		return false
 	}
 
-	_, okd := self.data[_DEFAULT_SECTION][option]
+	_, okd := self.data[DEFAULT_SECTION][option]
 	_, oknd := self.data[section][option]
 
 	return okd || oknd
@@ -75,8 +75,8 @@ func (self *Config) Options(section string) (options []string, err error) {
 
 	// Keep a map of option names we've seen to deduplicate.
 	optionMap := make(map[string]struct{},
-		len(self.data[_DEFAULT_SECTION])+len(self.data[section]))
-	for s, _ := range self.data[_DEFAULT_SECTION] {
+		len(self.data[DEFAULT_SECTION])+len(self.data[section]))
+	for s, _ := range self.data[DEFAULT_SECTION] {
 		optionMap[s] = struct{}{}
 	}
 	for s, _ := range self.data[section] {

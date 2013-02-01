@@ -75,7 +75,7 @@ func (self *Config) RawString(section string, option string) (value string, err 
 //
 // It returns an error if the option does not exist in the DEFAULT section.
 func (self *Config) RawStringDefault(option string) (value string, err error) {
-	if tValue, ok := self.data[_DEFAULT_SECTION][option]; ok {
+	if tValue, ok := self.data[DEFAULT_SECTION][option]; ok {
 		return tValue.v, nil
 	}
 	return "", errors.New(OptionError(option).Error())
@@ -107,7 +107,7 @@ func (self *Config) String(section string, option string) (value string, err err
 		noption = strings.TrimRight(noption, ")s")
 
 		// Search variable in default section
-		nvalue, _ := self.data[_DEFAULT_SECTION][noption]
+		nvalue, _ := self.data[DEFAULT_SECTION][noption]
 		if _, ok := self.data[section][noption]; ok {
 			nvalue = self.data[section][noption]
 		}

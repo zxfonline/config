@@ -22,7 +22,7 @@ package config
 // It returns true if the new section was inserted, and false if the section
 // already existed.
 func (self *Config) AddSection(section string) bool {
-	// _DEFAULT_SECTION
+	// DEFAULT_SECTION
 	if section == "" {
 		return false
 	}
@@ -46,7 +46,7 @@ func (self *Config) RemoveSection(section string) bool {
 	_, ok := self.data[section]
 
 	// Default section cannot be removed.
-	if !ok || section == _DEFAULT_SECTION {
+	if !ok || section == DEFAULT_SECTION {
 		return false
 	}
 

@@ -56,7 +56,7 @@ func (self *Config) write(buf *bufio.Writer, header string) (err error) {
 			if section == orderedSection {
 
 				// Skip default section if empty.
-				if section == _DEFAULT_SECTION && len(sectionMap) == 0 {
+				if section == DEFAULT_SECTION && len(sectionMap) == 0 {
 					continue
 				}
 

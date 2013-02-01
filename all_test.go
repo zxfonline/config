@@ -113,7 +113,7 @@ func TestInMemory(t *testing.T) {
 	}
 
 	// default section always exists
-	if c.AddSection(_DEFAULT_SECTION) {
+	if c.AddSection(DEFAULT_SECTION) {
 		t.Errorf("AddSection failure: true on default section insert")
 	}
 
@@ -182,10 +182,10 @@ func TestInMemory(t *testing.T) {
 
 	// === Test cycle
 
-	c.AddOption(_DEFAULT_SECTION, "opt1", "%(opt2)s")
-	c.AddOption(_DEFAULT_SECTION, "opt2", "%(opt1)s")
+	c.AddOption(DEFAULT_SECTION, "opt1", "%(opt2)s")
+	c.AddOption(DEFAULT_SECTION, "opt2", "%(opt1)s")
 
-	_, err = c.String(_DEFAULT_SECTION, "opt1")
+	_, err = c.String(DEFAULT_SECTION, "opt1")
 	if err == nil {
 		t.Errorf("String failure: no error for cycle")
 	} else if strings.Index(err.Error(), "cycle") < 0 {
@@ -208,7 +208,7 @@ func TestReadFile(t *testing.T) {
 	buf.WriteString("  # Let me put another comment\n")
 	buf.WriteString("    option3= line1\nline2 \n\tline3 # Comment\n")
 	buf.WriteString("; Another comment\n")
-	buf.WriteString("[" + _DEFAULT_SECTION + "]\n")
+	buf.WriteString("[" + DEFAULT_SECTION + "]\n")
 	buf.WriteString("variable1=small\n")
 	buf.WriteString("variable2=a_part_of_a_%(variable1)s_test\n")
 	buf.WriteString("[secTION-2]\n")
@@ -254,8 +254,8 @@ func TestWriteReadFile(t *testing.T) {
 	cw.AddOption("First-Section", "option2", "2")
 
 	cw.AddOption("", "host", "www.example.com")
-	cw.AddOption(_DEFAULT_SECTION, "protocol", "https://")
-	cw.AddOption(_DEFAULT_SECTION, "base-url", "%(protocol)s%(host)s")
+	cw.AddOption(DEFAULT_SECTION, "protocol", "https://")
+	cw.AddOption(DEFAULT_SECTION, "base-url", "%(protocol)s%(host)s")
 
 	cw.AddOption("Another-Section", "useHTTPS", "y")
 	cw.AddOption("Another-Section", "url", "%(base-url)s/some/path")
@@ -286,8 +286,8 @@ func TestSectionOptions(t *testing.T) {
 	cw.AddOption("First-Section", "option2", "2")
 
 	cw.AddOption("", "host", "www.example.com")
-	cw.AddOption(_DEFAULT_SECTION, "protocol", "https://")
-	cw.AddOption(_DEFAULT_SECTION, "base-url", "%(protocol)s%(host)s")
+	cw.AddOption(DEFAULT_SECTION, "protocol", "https://")
+	cw.AddOption(DEFAULT_SECTION, "base-url", "%(protocol)s%(host)s")
 
 	cw.AddOption("Another-Section", "useHTTPS", "y")
 	cw.AddOption("Another-Section", "url", "%(base-url)s/some/path")
@@ -324,7 +324,7 @@ func TestSectionOptions(t *testing.T) {
 		t.Fatalf("SectionOptions reads wrong data: %v", options)
 	}
 
-	options, err = cr.SectionOptions(_DEFAULT_SECTION)
+	options, err = cr.SectionOptions(DEFAULT_SECTION)
 
 	if err != nil {
 		t.Fatalf("SectionOptions failure: %s", err)

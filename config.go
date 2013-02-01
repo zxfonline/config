@@ -21,7 +21,7 @@ import (
 
 const (
 	// Default section name.
-	_DEFAULT_SECTION = "DEFAULT"
+	DEFAULT_SECTION = "DEFAULT"
 	// Maximum allowed depth when recursively substituing variable names.
 	_DEPTH_VALUES = 200
 
@@ -110,7 +110,7 @@ func New(comment, separator string, preSpace, postSpace bool) *Config {
 	c.lastIdOption = make(map[string]int)
 	c.data = make(map[string]map[string]*tValue)
 
-	c.AddSection(_DEFAULT_SECTION) // Default section always exists.
+	c.AddSection(DEFAULT_SECTION) // Default section always exists.
 
 	return c
 }
