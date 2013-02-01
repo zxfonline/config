@@ -23,7 +23,7 @@ import (
 )
 
 const (
-	tmp    = "/tmp/__config_test.go__garbage"
+	tmp    = "testdata/__test.go"
 	source = "testdata/source.cfg"
 	target = "testdata/target.cfg"
 )
