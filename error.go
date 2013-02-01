@@ -14,14 +14,14 @@
 
 package config
 
-type sectionError string
+type SectionError string
 
-func (self sectionError) Error() string {
+func (self SectionError) Error() string {
 	return "section not found: " + string(self)
 }
 
-type optionError string
+type OptionError string
 
-func (self optionError) Error() string {
+func (self OptionError) Error() string {
 	return "option not found: " + string(self)
 }

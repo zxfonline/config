@@ -70,7 +70,7 @@ func (self *Config) HasOption(section string, option string) bool {
 // section is empty. Options within the default section are also included.
 func (self *Config) Options(section string) (options []string, err error) {
 	if _, ok := self.data[section]; !ok {
-		return nil, errors.New(sectionError(section).Error())
+		return nil, errors.New(SectionError(section).Error())
 	}
 
 	// Keep a map of option names we've seen to deduplicate.
@@ -99,7 +99,7 @@ func (self *Config) Options(section string) (options []string, err error) {
 // It returns an error if the section doesn't exist.
 func (self *Config) SectionOptions(section string) (options []string, err error) {
 	if _, ok := self.data[section]; !ok {
-		return nil, errors.New(sectionError(section).Error())
+		return nil, errors.New(SectionError(section).Error())
 	}
 
 	options = make([]string, len(self.data[section]))
