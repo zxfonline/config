@@ -22,7 +22,7 @@ import (
 	"strings"
 )
 
-// Base to read a file and get the configuration representation.
+// _read is the base to read a file and get the configuration representation.
 // That representation can be queried with GetString, etc.
 func _read(fname string, c *Config) (*Config, error) {
 	file, err := os.Open(fname)
@@ -41,7 +41,7 @@ func _read(fname string, c *Config) (*Config, error) {
 	return c, nil
 }
 
-// ReadDefault reads a configuration file and returns its representation.
+// Read reads a configuration file and returns its representation.
 // All arguments, except `fname`, are related to `New()`
 func Read(fname string, comment, separator string, preSpace, postSpace bool) (*Config, error) {
 	return _read(fname, New(comment, separator, preSpace, postSpace))

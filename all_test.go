@@ -55,11 +55,11 @@ func testGet(t *testing.T, c *Config, section string, option string,
 	}
 }
 
-// Creates configuration representation and run multiple tests in-memory.
+// TestInMemory creates configuration representation and run multiple tests in-memory.
 func TestInMemory(t *testing.T) {
 	c := NewDefault()
 
-	// === Test empty structure
+	// == Test empty structure
 
 	// should be empty
 	if len(c.Sections()) != 1 {
@@ -104,7 +104,7 @@ func TestInMemory(t *testing.T) {
 		t.Errorf("RemoveOption failure: removed missing section/option")
 	}
 
-	// === Fill up structure
+	// == Fill up structure
 
 	// add section
 	if !c.AddSection("section1") {
@@ -159,7 +159,7 @@ func TestInMemory(t *testing.T) {
 		t.Errorf("RemoveSection failure: true on second remove")
 	}
 
-	// === Test types
+	// == Test types
 
 	// add section
 	if !c.AddSection("section2") {
@@ -184,7 +184,7 @@ func TestInMemory(t *testing.T) {
 	}
 	testGet(t, c, "section2", "test-false", false) // read it back
 
-	// === Test cycle
+	// == Test cycle
 
 	c.AddOption(DEFAULT_SECTION, "opt1", "%(opt2)s")
 	c.AddOption(DEFAULT_SECTION, "opt2", "%(opt1)s")
@@ -197,7 +197,7 @@ func TestInMemory(t *testing.T) {
 	}
 }
 
-// Creates a 'tough' configuration file and test (read) parsing.
+// TestReadFile creates a 'tough' configuration file and test (read) parsing.
 func TestReadFile(t *testing.T) {
 	file, err := os.Create(tmp)
 	if err != nil {
@@ -248,7 +248,7 @@ func TestReadFile(t *testing.T) {
 	testGet(t, c, "secTION-2", "IS-flag-TRUE", true) // case-sensitive
 }
 
-// Tests writing and reading back a configuration file.
+// TestWriteReadFile tests writing and reading back a configuration file.
 func TestWriteReadFile(t *testing.T) {
 	cw := NewDefault()
 
@@ -280,7 +280,7 @@ func TestWriteReadFile(t *testing.T) {
 	defer os.Remove(tmp)
 }
 
-// Tests read options in a section without default options.
+// TestSectionOptions tests read options in a section without default options.
 func TestSectionOptions(t *testing.T) {
 	cw := NewDefault()
 
@@ -352,7 +352,7 @@ func TestSectionOptions(t *testing.T) {
 	defer os.Remove(tmp)
 }
 
-// Tests merging 2 configurations.
+// TestMerge tests merging 2 configurations.
 func TestMerge(t *testing.T) {
 	target, error := ReadDefault(target)
 	if error != nil {

@@ -67,7 +67,7 @@ type Config struct {
 	data map[string]map[string]*tValue
 }
 
-// Hold the input position for a value.
+// tValue holds the input position for a value.
 type tValue struct {
 	position int    // Option order
 	v        string // value

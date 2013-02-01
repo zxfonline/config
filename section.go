@@ -70,7 +70,7 @@ func (self *Config) HasSection(section string) bool {
 }
 
 // Sections returns the list of sections in the configuration.
-// (The default section always exists.)
+// (The default section always exists).
 func (self *Config) Sections() (sections []string) {
 	sections = make([]string, len(self.idSection))
 	pos := 0 // Position in sections
