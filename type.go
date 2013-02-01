@@ -66,12 +66,8 @@ func (self *Config) RawString(section string, option string) (value string, err 
 		if tValue, ok := self.data[section][option]; ok {
 			return tValue.v, nil
 		}
-		return self.RawStringDefault(option)
 	}
-	if val, err := self.RawStringDefault(option); err == nil {
-		return val, nil
-	}
-	return "", errors.New(SectionError(section).Error())
+	return self.RawStringDefault(option)
 }
 
 // RawStringDefault gets the (raw) string value for the given option from the
