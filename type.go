@@ -22,8 +22,8 @@ import (
 
 // Bool has the same behaviour as String but converts the response to bool.
 // See "boolString" for string values converted to bool.
-func (self *Config) Bool(section string, option string) (value bool, err error) {
-	sv, err := self.String(section, option)
+func (c *Config) Bool(section string, option string) (value bool, err error) {
+	sv, err := c.String(section, option)
 	if err != nil {
 		return false, err
 	}
@@ -37,8 +37,8 @@ func (self *Config) Bool(section string, option string) (value bool, err error) 
 }
 
 // Float has the same behaviour as String but converts the response to float.
-func (self *Config) Float(section string, option string) (value float64, err error) {
-	sv, err := self.String(section, option)
+func (c *Config) Float(section string, option string) (value float64, err error) {
+	sv, err := c.String(section, option)
 	if err == nil {
 		value, err = strconv.ParseFloat(sv, 64)
 	}
@@ -47,8 +47,8 @@ func (self *Config) Float(section string, option string) (value float64, err err
 }
 
 // Int has the same behaviour as String but converts the response to int.
-func (self *Config) Int(section string, option string) (value int, err error) {
-	sv, err := self.String(section, option)
+func (c *Config) Int(section string, option string) (value int, err error) {
+	sv, err := c.String(section, option)
 	if err == nil {
 		value, err = strconv.Atoi(sv)
 	}
@@ -61,21 +61,21 @@ func (self *Config) Int(section string, option string) (value int, err error) {
 // the beginning of this documentation.
 //
 // It returns an error if either the section or the option do not exist.
-func (self *Config) RawString(section string, option string) (value string, err error) {
-	if _, ok := self.data[section]; ok {
-		if tValue, ok := self.data[section][option]; ok {
+func (c *Config) RawString(section string, option string) (value string, err error) {
+	if _, ok := c.data[section]; ok {
+		if tValue, ok := c.data[section][option]; ok {
 			return tValue.v, nil
 		}
 	}
-	return self.RawStringDefault(option)
+	return c.RawStringDefault(option)
 }
 
 // RawStringDefault gets the (raw) string value for the given option from the
 // DEFAULT section.
 //
 // It returns an error if the option does not exist in the DEFAULT section.
-func (self *Config) RawStringDefault(option string) (value string, err error) {
-	if tValue, ok := self.data[DEFAULT_SECTION][option]; ok {
+func (c *Config) RawStringDefault(option string) (value string, err error) {
+	if tValue, ok := c.data[DEFAULT_SECTION][option]; ok {
 		return tValue.v, nil
 	}
 	return "", OptionError(option)
@@ -88,8 +88,8 @@ func (self *Config) RawStringDefault(option string) (value string, err error) {
 //
 // It returns an error if either the section or the option do not exist, or the
 // unfolding cycled.
-func (self *Config) String(section string, option string) (value string, err error) {
-	value, err = self.RawString(section, option)
+func (c *Config) String(section string, option string) (value string, err error) {
+	value, err = c.RawString(section, option)
 	if err != nil {
 		return "", err
 	}
@@ -107,9 +107,9 @@ func (self *Config) String(section string, option string) (value string, err err
 		noption = strings.TrimRight(noption, ")s")
 
 		// Search variable in default section
-		nvalue, _ := self.data[DEFAULT_SECTION][noption]
-		if _, ok := self.data[section][noption]; ok {
-			nvalue = self.data[section][noption]
+		nvalue, _ := c.data[DEFAULT_SECTION][noption]
+		if _, ok := c.data[section][noption]; ok {
+			nvalue = c.data[section][noption]
 		}
 		if nvalue.v == "" {
 			return "", OptionError(option)

@@ -55,7 +55,7 @@ func ReadDefault(fname string) (*Config, error) {
 
 // * * *
 
-func (self *Config) read(buf *bufio.Reader) (err error) {
+func (c *Config) read(buf *bufio.Reader) (err error) {
 	var section, option string
 
 	for {
@@ -82,7 +82,7 @@ func (self *Config) read(buf *bufio.Reader) (err error) {
 		case l[0] == '[' && l[len(l)-1] == ']':
 			option = "" // reset multi-line value
 			section = strings.TrimSpace(l[1 : len(l)-1])
-			self.AddSection(section)
+			c.AddSection(section)
 
 		// No new section and no section defined so
 		//case section == "":
@@ -98,12 +98,12 @@ func (self *Config) read(buf *bufio.Reader) (err error) {
 				i := strings.IndexAny(l, "=:")
 				option = strings.TrimSpace(l[0:i])
 				value := strings.TrimSpace(stripComments(l[i+1:]))
-				self.AddOption(section, option, value)
+				c.AddOption(section, option, value)
 			// Continuation of multi-line value
 			case section != "" && option != "":
-				prev, _ := self.RawString(section, option)
+				prev, _ := c.RawString(section, option)
 				value := strings.TrimSpace(stripComments(l))
-				self.AddOption(section, option, prev+"\n"+value)
+				c.AddOption(section, option, prev+"\n"+value)
 
 			default:
 				return errors.New("could not parse line: " + l)

@@ -16,12 +16,12 @@ package config
 
 type SectionError string
 
-func (self SectionError) Error() string {
-	return "section not found: " + string(self)
+func (e SectionError) Error() string {
+	return "section not found: " + string(e)
 }
 
 type OptionError string
 
-func (self OptionError) Error() string {
-	return "option not found: " + string(self)
+func (e OptionError) Error() string {
+	return "option not found: " + string(e)
 }
