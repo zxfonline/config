@@ -15,4 +15,5 @@ explanation.*
 [Jonas mg](github.com/kless)
 [Miguel Branco](github.com/msbranco)
 [Rob Figueiredo](github.com/robfig)
+[Tom Bruggeman](github.com/tmbrggmn)
 

@@ -24,4 +24,5 @@ because the organization holds the copyright.*
 ### Other authors
 
 [Jonas mg](github.com/kless)
+[Tom Bruggeman](github.com/tmbrggmn)
 
