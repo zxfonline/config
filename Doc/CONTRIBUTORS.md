@@ -15,14 +15,14 @@ because the organization holds the copyright.*
 
 ### Initial author
 
-[Miguel Branco](github.com/msbranco)
+[Miguel Branco](https://github.com/msbranco)
 
 ### Maintainer
 
-[Rob Figueiredo](github.com/robfig)
+[Rob Figueiredo](https://github.com/robfig)
 
 ### Other authors
 
-[Jonas mg](github.com/kless)
-[Tom Bruggeman](github.com/tmbrggmn)
+[Jonas mg](https://github.com/kless)
+[Tom Bruggeman](https://github.com/tmbrggmn)
 
