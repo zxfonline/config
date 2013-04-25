@@ -51,7 +51,8 @@ func testGet(t *testing.T, c *Config, section string, option string,
 		t.Fatalf("Bad test case")
 	}
 	if !ok {
-		t.Errorf("Get failure: expected different value for %s %s", section, option)
+		v, _ := c.String(section, option)
+		t.Errorf("Get failure: expected different value for %s %s (expected: [%#v] got: [%#v])", section, option, expected, v)
 	}
 }
 
@@ -204,6 +205,11 @@ func TestReadFile(t *testing.T) {
 		t.Fatal("Test cannot run because cannot write temporary file: " + tmp)
 	}
 
+	err = os.Setenv("GO_CONFIGFILE_TEST_ENV_VAR", "configvalue12345")
+	if err != nil {
+		t.Fatalf("Test cannot run because cannot set environment variable GO_CONFIGFILE_TEST_ENV_VAR: %#v", err)
+	}
+
 	buf := bufio.NewWriter(file)
 	buf.WriteString("optionInDefaultSection=true\n")
 	buf.WriteString("[section-1]\n")
@@ -219,6 +225,7 @@ func TestReadFile(t *testing.T) {
 	buf.WriteString("IS-flag-TRUE=Yes\n")
 	buf.WriteString("[section-1]\n") // continue again [section-1]
 	buf.WriteString("option4=this_is_%(variable2)s.\n")
+	buf.WriteString("envoption1=this_uses_${GO_CONFIGFILE_TEST_ENV_VAR}_env\n")
 	buf.WriteString("optionInDefaultSection=false\n")
 	buf.Flush()
 	file.Close()
@@ -233,9 +240,9 @@ func TestReadFile(t *testing.T) {
 		t.Errorf("Sections failure: wrong number of sections")
 	}
 
-	// check number of options 4 of [section-1] plus 2 of [default]
+	// check number of options 6 of [section-1] plus 2 of [default]
 	opts, err := c.Options("section-1")
-	if len(opts) != 7 {
+	if len(opts) != 8 {
 		t.Errorf("Options failure: wrong number of options: %d", len(opts))
 	}
 
@@ -243,6 +250,7 @@ func TestReadFile(t *testing.T) {
 	testGet(t, c, "section-1", "option2", "2#Not a comment")
 	testGet(t, c, "section-1", "option3", "line1\nline2\nline3")
 	testGet(t, c, "section-1", "option4", "this_is_a_part_of_a_small_test.")
+	testGet(t, c, "section-1", "envoption1", "this_uses_configvalue12345_env")
 	testGet(t, c, "section-1", "optionInDefaultSection", false)
 	testGet(t, c, "section-2", "optionInDefaultSection", true)
 	testGet(t, c, "secTION-2", "IS-flag-TRUE", true) // case-sensitive

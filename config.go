@@ -48,7 +48,8 @@ var (
 		"0":     false,
 	}
 
-	varRegExp = regexp.MustCompile(`%\(([a-zA-Z0-9_.\-]+)\)s`) // %(variable)s
+	varRegExp    = regexp.MustCompile(`%\(([a-zA-Z0-9_.\-]+)\)s`) // %(variable)s
+	envVarRegExp = regexp.MustCompile(`\${([a-zA-Z0-9_.\-]+)}`)   // ${envvar}
 )
 
 // Config is the representation of configuration settings.

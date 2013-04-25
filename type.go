@@ -16,9 +16,51 @@ package config
 
 import (
 	"errors"
+	"fmt"
+	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
+
+// Substitutes values, calculated by callback, on matching regex
+func (c *Config) computeVar(beforeValue *string, regx *regexp.Regexp, headsz, tailsz int, withVar func(*string) string) (*string, error) {
+	var i int
+	computedVal := beforeValue
+	for i = 0; i < _DEPTH_VALUES; i++ { // keep a sane depth
+
+		vr := regx.FindStringSubmatchIndex(*computedVal)
+		if len(vr) == 0 {
+			break
+		}
+
+		varname := (*computedVal)[vr[headsz]:vr[headsz+1]]
+		varVal := withVar(&varname)
+		if varVal == "" {
+			return &varVal, errors.New(fmt.Sprintf("Option not found: %s", varname))
+		}
+
+		// substitute by new value and take off leading '%(' and trailing ')s'
+		//  %(foo)s => headsz=2, tailsz=2
+		//  ${foo}  => headsz=2, tailsz=1
+		fmt.Printf(">> computedval=[%s]\n", *computedVal)
+		newVal := (*computedVal)[0:vr[headsz]-headsz] + varVal + (*computedVal)[vr[headsz+1]+tailsz:]
+		computedVal = &newVal
+	}
+
+	if i == _DEPTH_VALUES {
+		retVal := ""
+		return &retVal,
+			errors.New(
+				fmt.Sprintf(
+					"Possible cycle while unfolding variables: max depth of %d reached",
+					strconv.Itoa(_DEPTH_VALUES),
+				),
+			)
+	}
+
+	return computedVal, nil
+}
 
 // Bool has the same behaviour as String but converts the response to bool.
 // See "boolString" for string values converted to bool.
@@ -94,35 +136,26 @@ func (c *Config) String(section string, option string) (value string, err error)
 		return "", err
 	}
 
-	var i int
-
-	for i = 0; i < _DEPTH_VALUES; i++ { // keep a sane depth
-		vr := varRegExp.FindString(value)
-		if len(vr) == 0 {
-			break
+	// % variables
+	computedVal, err := c.computeVar(&value, varRegExp, 2, 2, func(varName *string) string {
+		lowerVar := *varName
+		// search variable in default section as well as current section
+		varVal, _ := c.data[DEFAULT_SECTION][lowerVar]
+		if _, ok := c.data[section][lowerVar]; ok {
+			varVal = c.data[section][lowerVar]
 		}
+		return varVal.v
+	})
+	value = *computedVal
 
-		// Take off leading '%(' and trailing ')s'
-		noption := strings.TrimLeft(vr, "%(")
-		noption = strings.TrimRight(noption, ")s")
-
-		// Search variable in default section
-		nvalue, _ := c.data[DEFAULT_SECTION][noption]
-		if _, ok := c.data[section][noption]; ok {
-			nvalue = c.data[section][noption]
-		}
-		if nvalue.v == "" {
-			return "", OptionError(option)
-		}
-
-		// substitute by new value and take off leading '%(' and trailing ')s'
-		value = strings.Replace(value, vr, nvalue.v, -1)
+	if err != nil {
+		return value, err
 	}
 
-	if i == _DEPTH_VALUES {
-		return "", errors.New("possible cycle while unfolding variables: " +
-			"max depth of " + strconv.Itoa(_DEPTH_VALUES) + " reached")
-	}
-
-	return value, nil
+	// $ environment variables
+	computedVal, err = c.computeVar(&value, envVarRegExp, 2, 1, func(varName *string) string {
+		return os.Getenv(*varName)
+	})
+	value = *computedVal
+	return value, err
 }
