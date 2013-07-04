@@ -43,7 +43,6 @@ func (c *Config) computeVar(beforeValue *string, regx *regexp.Regexp, headsz, ta
 		// substitute by new value and take off leading '%(' and trailing ')s'
 		//  %(foo)s => headsz=2, tailsz=2
 		//  ${foo}  => headsz=2, tailsz=1
-		fmt.Printf(">> computedval=[%s]\n", *computedVal)
 		newVal := (*computedVal)[0:vr[headsz]-headsz] + varVal + (*computedVal)[vr[headsz+1]+tailsz:]
 		computedVal = &newVal
 	}
