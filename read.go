@@ -74,10 +74,6 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 		case len(l) == 0, l[0] == '#', l[0] == ';':
 			continue
 
-		// Comment (for windows users)
-		case len(l) >= 3 && strings.ToLower(l[0:3]) == "rem":
-			continue
-
 		// New section
 		case l[0] == '[' && l[len(l)-1] == ']':
 			option = "" // reset multi-line value
