@@ -152,7 +152,7 @@ func (c *Config) String(section string, option string) (value string, err error)
 	}
 
 	// $ environment variables
-	computedVal, err = c.computeVar(&value, envVarRegExp, 2, 1, func(varName *string) string {
+	computedVal, _ = c.computeVar(&value, envVarRegExp, 2, 1, func(varName *string) string {
 		return os.Getenv(*varName)
 	})
 	value = *computedVal
