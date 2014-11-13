@@ -226,7 +226,7 @@ func TestReadFile(t *testing.T) {
 	buf.WriteString("[section-1]\n") // continue again [section-1]
 	buf.WriteString("option4=this_is_%(variable2)s.\n")
 	buf.WriteString("envoption1=this_uses_${GO_CONFIGFILE_TEST_ENV_VAR}_env\n")
-	buf.WriteString("optionInDefaultSection=false\n")
+	buf.WriteString("optionInDefaultSection=false")
 	buf.Flush()
 	file.Close()
 

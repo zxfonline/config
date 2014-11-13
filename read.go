@@ -17,7 +17,6 @@ package config
 import (
 	"bufio"
 	"errors"
-	"io"
 	"os"
 	"strings"
 )
@@ -58,15 +57,10 @@ func ReadDefault(fname string) (*Config, error) {
 func (c *Config) read(buf *bufio.Reader) (err error) {
 	var section, option string
 
-	for {
-		l, err := buf.ReadString('\n') // parse line-by-line
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			return err
-		}
+	scanner := bufio.NewScanner(buf)
 
-		l = strings.TrimSpace(l)
+	for scanner.Scan() {
+		l := strings.TrimSpace(scanner.Text())
 
 		// Switch written for readability (not performance)
 		switch {
@@ -106,5 +100,5 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 			}
 		}
 	}
-	return nil
+	return scanner.Err()
 }
