@@ -223,7 +223,7 @@ func TestReadFile(t *testing.T) {
 	buf.WriteString("variable2=a_part_of_a_%(variable1)s_test\n")
 	buf.WriteString("[secTION-2]\n")
 	buf.WriteString("IS-flag-TRUE=Yes\n")
-	buf.WriteString("[section-1]\n") // continue again [section-1]
+	buf.WriteString("[section-1] # comment on section header\n") // continue again [section-1]
 	buf.WriteString("option4=this_is_%(variable2)s.\n")
 	buf.WriteString("envoption1=this_uses_${GO_CONFIGFILE_TEST_ENV_VAR}_env\n")
 	buf.WriteString("optionInDefaultSection=false\n")
