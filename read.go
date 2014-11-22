@@ -56,11 +56,9 @@ func ReadDefault(fname string) (*Config, error) {
 
 func (c *Config) read(buf *bufio.Reader) (err error) {
 	var section, option string
-
-	scanner := bufio.NewScanner(buf)
-
+	var scanner = bufio.NewScanner(buf)
 	for scanner.Scan() {
-		l := strings.TrimSpace(scanner.Text())
+		l := strings.TrimSpace(stripComments(scanner.Text()))
 
 		// Switch written for readability (not performance)
 		switch {
@@ -87,12 +85,12 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 			case i > 0:
 				i := strings.IndexAny(l, "=:")
 				option = strings.TrimSpace(l[0:i])
-				value := strings.TrimSpace(stripComments(l[i+1:]))
+				value := strings.TrimSpace(l[i+1:])
 				c.AddOption(section, option, value)
 			// Continuation of multi-line value
 			case section != "" && option != "":
 				prev, _ := c.RawString(section, option)
-				value := strings.TrimSpace(stripComments(l))
+				value := strings.TrimSpace(l)
 				c.AddOption(section, option, prev+"\n"+value)
 
 			default:
