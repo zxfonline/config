@@ -216,7 +216,7 @@ func TestReadFile(t *testing.T) {
 	buf.WriteString("option1=value1 ; This is a comment\n")
 	buf.WriteString("option2 : 2#Not a comment\t#Now this is a comment after a TAB\n")
 	buf.WriteString("  # Let me put another comment\n")
-	buf.WriteString("option3= line1\n line2 \n\tline3 # Comment\n")
+	buf.WriteString("option3= line1\n line2: \n\tline3=v # Comment multiline with := in value\n")
 	buf.WriteString("; Another comment\n")
 	buf.WriteString("[" + DEFAULT_SECTION + "]\n")
 	buf.WriteString("variable1=small\n")
@@ -248,7 +248,7 @@ func TestReadFile(t *testing.T) {
 
 	testGet(t, c, "section-1", "option1", "value1")
 	testGet(t, c, "section-1", "option2", "2#Not a comment")
-	testGet(t, c, "section-1", "option3", "line1\nline2\nline3")
+	testGet(t, c, "section-1", "option3", "line1\nline2:\nline3=v")
 	testGet(t, c, "section-1", "option4", "this_is_a_part_of_a_small_test.")
 	testGet(t, c, "section-1", "envoption1", "this_uses_configvalue12345_env")
 	testGet(t, c, "section-1", "optionInDefaultSection", false)
