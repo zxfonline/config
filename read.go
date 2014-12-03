@@ -73,9 +73,12 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 			section = strings.TrimSpace(l[1 : len(l)-1])
 			c.AddSection(section)
 
-		// No new section and no section defined so
-		//case section == "":
-		//return os.NewError("no section defined")
+		// Continuation of multi-line value
+		// starts with whitespace, we're in a section and working on an option
+		case section != "" && option != "" && (l[0] == ' ' || l[0] == '\t'):
+			prev, _ := c.RawString(section, option)
+			value := strings.TrimSpace(l)
+			c.AddOption(section, option, prev+"\n"+value)
 
 		// Other alternatives
 		default:
@@ -84,16 +87,9 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 			switch {
 			// Option and value
 			case i > 0 && l[0] != ' ' && l[0] != '\t': // found an =: and it's not a multiline continuation
-				// i := strings.IndexAny(l, "=:")
 				option = strings.TrimSpace(l[0:i])
 				value := strings.TrimSpace(l[i+1:])
 				c.AddOption(section, option, value)
-			// Continuation of multi-line value
-			// starts with whitespace, we're in a section and working on an option
-			case section != "" && option != "" && (l[0] == ' ' || l[0] == '\t'):
-				prev, _ := c.RawString(section, option)
-				value := strings.TrimSpace(l)
-				c.AddOption(section, option, prev+"\n"+value)
 
 			default:
 				return errors.New("could not parse line: " + l)
