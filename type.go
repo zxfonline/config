@@ -50,12 +50,7 @@ func (c *Config) computeVar(beforeValue *string, regx *regexp.Regexp, headsz, ta
 	if i == _DEPTH_VALUES {
 		retVal := ""
 		return &retVal,
-			errors.New(
-				fmt.Sprintf(
-					"Possible cycle while unfolding variables: max depth of %d reached",
-					strconv.Itoa(_DEPTH_VALUES),
-				),
-			)
+			fmt.Errorf("Possible cycle while unfolding variables: max depth of %d reached", _DEPTH_VALUES)
 	}
 
 	return computedVal, nil
