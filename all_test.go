@@ -362,13 +362,13 @@ func TestSectionOptions(t *testing.T) {
 
 // TestMerge tests merging 2 configurations.
 func TestMerge(t *testing.T) {
-	target, error := ReadDefault(targetFilename)
-	if error != nil {
+	target, err := ReadDefault(targetFilename)
+	if err != nil {
 		t.Fatalf("Unable to read target config file '%s'", targetFilename)
 	}
 
-	source, error := ReadDefault(sourceFilename)
-	if error != nil {
+	source, err := ReadDefault(sourceFilename)
+	if err != nil {
 		t.Fatalf("Unable to read source config file '%s'", sourceFilename)
 	}
 
