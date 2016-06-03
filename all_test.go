@@ -397,4 +397,8 @@ func TestMerge(t *testing.T) {
 	if result, _ := target.String("X", "x.four"); result != "x4" {
 		t.Errorf("Expected '[X] x.four' to be 'x4' but instead it was '%s'", result)
 	}
+	result, _ := target.Bool("Y", "192.168.1.1")
+	t.Logf("a=%v", result)
+	result, _ = target.Bool("Y", "192.168.1.2")
+	t.Logf("b=%v", result)
 }
