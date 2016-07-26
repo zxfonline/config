@@ -27,8 +27,8 @@ const (
 
 	DEFAULT_COMMENT       = "# "
 	ALTERNATIVE_COMMENT   = "; "
-	DEFAULT_SEPARATOR     = ":"
-	ALTERNATIVE_SEPARATOR = "="
+	DEFAULT_SEPARATOR     = "="
+	ALTERNATIVE_SEPARATOR = ":"
 )
 
 var (

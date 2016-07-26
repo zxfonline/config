@@ -397,8 +397,16 @@ func TestMerge(t *testing.T) {
 	if result, _ := target.String("X", "x.four"); result != "x4" {
 		t.Errorf("Expected '[X] x.four' to be 'x4' but instead it was '%s'", result)
 	}
-	result, _ := target.Bool("Y", "192.168.1.1")
-	t.Logf("a=%v", result)
-	result, _ = target.Bool("Y", "192.168.1.2")
-	t.Logf("b=%v", result)
+	if result, _ := target.Bool("Y", "192.168.1.1"); result == false {
+		t.Errorf("Expected '[Y] 192.168.1.1' to be 'true' but instead it was '%s'", result)
+	}
+	if result, _ := target.Bool("Y", "192.168.1.2"); result == true {
+		t.Errorf("Expected '[Y] 192.168.1.1' to be 'false' but instead it was '%s'", result)
+	}
+	if result, _ := target.Bool("Y", "2001:db8:1::"); result == false {
+		t.Errorf("Expected '[Y] 192.168.1.1' to be 'false' but instead it was '%s'", result)
+	}
+	if result, _ := target.String("Y", "2001"); result != "db8:2::" {
+		t.Errorf("Expected '[Y] 2001' to be 'db8:2::' but instead it was '%s'", result)
+	}
 }

@@ -82,8 +82,11 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 
 		// Other alternatives
 		default:
-			i := strings.IndexAny(l, "=:")
-
+			//			i := strings.IndexAny(l, "=:")
+			i := strings.Index(l, "=")
+			if i < 1 {
+				i = strings.Index(l, ":")
+			}
 			switch {
 			// Option and value
 			case i > 0 && l[0] != ' ' && l[0] != '\t': // found an =: and it's not a multiline continuation
