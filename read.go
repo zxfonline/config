@@ -18,6 +18,7 @@ import (
 	"bufio"
 	"errors"
 	"os"
+	"path/filepath"
 	"strings"
 	"unicode"
 )
@@ -25,6 +26,7 @@ import (
 // _read is the base to read a file and get the configuration representation.
 // That representation can be queried with GetString, etc.
 func _read(fname string, c *Config) (*Config, error) {
+	fname = strings.Replace(filepath.Clean(fname), "\\", "/", -1)
 	file, err := os.Open(fname)
 	if err != nil {
 		return nil, err

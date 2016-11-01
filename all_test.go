@@ -409,4 +409,11 @@ func TestMerge(t *testing.T) {
 	if result, _ := target.String("Y", "2001"); result != "db8:2::" {
 		t.Errorf("Expected '[Y] 2001' to be 'db8:2::' but instead it was '%s'", result)
 	}
+	if result, _ := target.String("X", "x.%(one)s"); result != "source1" {
+		t.Errorf("Expected '[X] x.%(one)s' to be 'source1' but instead it was '%s'", result)
+	} else {
+		if result, _ := target.DynamicString("x.%(one)s"); result != "x.source1" {
+			t.Errorf("Expected '[X] x.%(one)s' to be 'x.source1' but instead it was '%s'", result)
+		}
+	}
 }
