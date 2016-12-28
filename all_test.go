@@ -416,4 +416,13 @@ func TestMerge(t *testing.T) {
 			t.Errorf("Expected '[X] x.%(one)s' to be 'x.source1' but instead it was '%s'", result)
 		}
 	}
+	if result, _ := target.String("10000", "payload"); result != "echo_info" {
+		t.Errorf("Expected '[10000] payload' to be 'echo_info' but instead it was '%s'", result)
+	}
+	if result, _ := target.String("10000", "desc"); result != "测试消息" {
+		t.Errorf("Expected '[10000] desc' to be '测试消息' but instead it was '%s'", result)
+	}
+	if result, _ := target.String("echo_info", "s"); result != "string" {
+		t.Errorf("Expected '[echo_info] s' to be 'string' but instead it was '%s'", result)
+	}
 }

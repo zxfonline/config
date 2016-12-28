@@ -31,12 +31,9 @@ func _read(fname string, c *Config) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer file.Close()
 
 	if err = c.read(bufio.NewReader(file)); err != nil {
-		return nil, err
-	}
-
-	if err = file.Close(); err != nil {
 		return nil, err
 	}
 
@@ -62,7 +59,6 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 	var scanner = bufio.NewScanner(buf)
 	for scanner.Scan() {
 		l := strings.TrimRightFunc(stripComments(scanner.Text()), unicode.IsSpace)
-
 		// Switch written for readability (not performance)
 		switch {
 		// Empty line and comments
@@ -95,7 +91,7 @@ func (c *Config) read(buf *bufio.Reader) (err error) {
 				option = strings.TrimSpace(l[0:i])
 				value := strings.TrimSpace(l[i+1:])
 				c.AddOption(section, option, value)
-
+				//				fmt.Println(option, "=", value)
 			default:
 				return errors.New("could not parse line: " + l)
 			}
