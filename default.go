@@ -1,6 +1,7 @@
 // Copyright 2016 zxfonline@sina.com. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
+
 package config
 
 import (
@@ -26,23 +27,39 @@ func Merge(source *Config) {
 	_default.Merge(source)
 }
 func String(section string, option string) (value string, err error) {
+	if section == "" {
+		section = BASE_SECTION
+	}
 	return _default.String(section, option)
 }
 func RawStringDefault(option string) (value string, err error) {
 	return _default.RawStringDefault(option)
 }
 func RawString(section string, option string) (value string, err error) {
+	if section == "" {
+		section = BASE_SECTION
+	}
 	return _default.RawString(section, option)
 }
 func Int(section string, option string) (value int, err error) {
+	if section == "" {
+		section = BASE_SECTION
+	}
 	return _default.Int(section, option)
 }
 func Float(section string, option string) (value float64, err error) {
+	if section == "" {
+		section = BASE_SECTION
+	}
 	return _default.Float(section, option)
 }
 func Bool(section string, option string) (value bool, err error) {
+	if section == "" {
+		section = BASE_SECTION
+	}
 	return _default.Bool(section, option)
 }
+
 func HasSection(section string) bool {
 	return _default.HasSection(section)
 }

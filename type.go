@@ -24,7 +24,7 @@ import (
 )
 
 // Substitutes values, calculated by callback, on matching regex
-func (c *Config) computeVar(beforeValue *string, regx *regexp.Regexp, headsz, tailsz int, withVar func(*string) string) (*string, error) {
+func (c *Config) computeVar(beforeValue *string, regx *regexp.Regexp, headsz, tailsz int, withVar func(*string) (string, error)) (*string, error) {
 	var i int
 	computedVal := beforeValue
 	for i = 0; i < _DEPTH_VALUES; i++ { // keep a sane depth
@@ -35,9 +35,9 @@ func (c *Config) computeVar(beforeValue *string, regx *regexp.Regexp, headsz, ta
 		}
 
 		varname := (*computedVal)[vr[headsz]:vr[headsz+1]]
-		varVal := withVar(&varname)
-		if varVal == "" {
-			return &varVal, errors.New(fmt.Sprintf("Option not found: %s", varname))
+		varVal, err := withVar(&varname)
+		if err != nil {
+			return &varVal, err
 		}
 
 		// substitute by new value and take off leading '%(' and trailing ')s'
@@ -131,14 +131,17 @@ func (c *Config) String(section string, option string) (value string, err error)
 	}
 
 	// % variables
-	computedVal, err := c.computeVar(&value, varRegExp, 2, 2, func(varName *string) string {
+	computedVal, err := c.computeVar(&value, varRegExp, 2, 2, func(varName *string) (string, error) {
 		lowerVar := *varName
 		// search variable in default section as well as current section
 		varVal, _ := c.data[DEFAULT_SECTION][lowerVar]
 		if _, ok := c.data[section][lowerVar]; ok {
 			varVal = c.data[section][lowerVar]
 		}
-		return varVal.v
+		if varVal.v == "" {
+			return varVal.v, errors.New(fmt.Sprintf("Option not found: %s", lowerVar))
+		}
+		return varVal.v, nil
 	})
 	value = *computedVal
 
@@ -147,8 +150,13 @@ func (c *Config) String(section string, option string) (value string, err error)
 	}
 
 	// $ environment variables
-	computedVal, err = c.computeVar(&value, envVarRegExp, 2, 1, func(varName *string) string {
-		return os.Getenv(*varName)
+	computedVal, err = c.computeVar(&value, envVarRegExp, 2, 1, func(varName *string) (string, error) {
+		varVal, found := os.LookupEnv(*varName)
+		if found {
+			return varVal, nil
+		} else {
+			return varVal, errors.New(fmt.Sprintf("Option not found: %s", *varName))
+		}
 	})
 	value = *computedVal
 	return value, err
@@ -159,14 +167,17 @@ func (c *Config) String(section string, option string) (value string, err error)
 func (c *Config) DynamicString(str string) (value string, err error) {
 	value = str
 	// % variables
-	computedVal, err := c.computeVar(&value, varRegExp, 2, 2, func(varName *string) string {
+	computedVal, err := c.computeVar(&value, varRegExp, 2, 2, func(varName *string) (string, error) {
 		lowerVar := *varName
 		// search variable in default section as well as current section
 		varVal, _ := c.data[DEFAULT_SECTION][lowerVar]
 		//		if _, ok := c.data[section][lowerVar]; ok {
 		//			varVal = c.data[section][lowerVar]
 		//		}
-		return varVal.v
+		if varVal.v == "" {
+			return varVal.v, errors.New(fmt.Sprintf("Option not found: %s", lowerVar))
+		}
+		return varVal.v, nil
 	})
 	value = *computedVal
 
@@ -175,8 +186,13 @@ func (c *Config) DynamicString(str string) (value string, err error) {
 	}
 
 	// $ environment variables
-	computedVal, err = c.computeVar(&value, envVarRegExp, 2, 1, func(varName *string) string {
-		return os.Getenv(*varName)
+	computedVal, err = c.computeVar(&value, envVarRegExp, 2, 1, func(varName *string) (string, error) {
+		varVal, found := os.LookupEnv(*varName)
+		if found {
+			return varVal, nil
+		} else {
+			return varVal, errors.New(fmt.Sprintf("Option not found: %s", *varName))
+		}
 	})
 	value = *computedVal
 	return value, err
